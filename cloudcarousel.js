@@ -161,18 +161,20 @@ jQuery.browser = browser;
 			return false;
 		});
 		
-		// Add code that makes tab and shift+tab scroll through metacodes
-		$('.new_topic').bind('keydown',this,function(event){
-            if (event.keyCode == 9 && event.shiftKey) {
-				event.data.rotate(-1);
-                event.preventDefault();
-                event.stopPropagation();
-			} else if (event.keyCode == 9) {
-				event.data.rotate(1);
-                event.preventDefault();
-                event.stopPropagation();
-            }
-		});
+		// Add code that makes tab and shift+tab scroll through items
+		if (options.tabbingEl) {
+			options.tabbingEl.bind('keydown',this,function(event){
+	            if (event.keyCode == 9 && event.shiftKey) {
+					event.data.rotate(-1);
+	                event.preventDefault();
+	                event.stopPropagation();
+				} else if (event.keyCode == 9) {
+					event.data.rotate(1);
+	                event.preventDefault();
+	                event.stopPropagation();
+	            }
+			});
+		}
 		
 		// You will need this plugin for the mousewheel to work: http://plugins.jquery.com/project/mousewheel
 		if (options.mouseWheel)
@@ -197,7 +199,7 @@ jQuery.browser = browser;
 				if ( options.bringToFront && event.type == 'click' )				
 				{
                     $(options.titleBox).html( ($(event.target).attr('title') ));
-				   options.callback($(event.target).attr('data-id'));
+				   if (options.callback) options.callback($(event.target).attr('data-id'));
 					var	idx = $(event.target).data('itemIndex');	
 					var	frontIndex = event.data.frontIndex;
 					//var	diff = idx - frontIndex;                    
@@ -233,7 +235,7 @@ jQuery.browser = browser;
 		this.showFrontText = function()
 		{	
 			if ( items[this.frontIndex] === undefined ) { return; }	// Images might not have loaded yet.
-			options.callback($(items[this.frontIndex].image).attr('data-id'));
+			if (options.callback) options.callback($(items[this.frontIndex].image).attr('data-id'));
         //$('img.cloudcarousel').css({"background":"none", "width":"","height":""});
         //$(items[this.frontIndex].image).css({"width":"45px","height":"45px"});
 			$(options.titleBox).html( $(items[this.frontIndex].image).attr('title'));
